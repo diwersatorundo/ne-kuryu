@@ -44,12 +44,12 @@ export const spacing = {
 } as const;
 
 export const radius = {
-  xs: 5,
-  sm: 5,
-  md: 5,
-  lg: 5,
-  xl: 5,
-  xxl: 5,
+  xs: 6,
+  sm: 8,
+  md: 10,
+  lg: 12,
+  xl: 12,
+  xxl: 16,
   full: 999,
 } as const;
 
@@ -116,18 +116,18 @@ export const typography = {
 export const gradients = {
   screen: ['#000000', '#000000', '#000000'] as const,
   glass: [
-    'rgba(255, 255, 255, 0.10)',
-    'rgba(255, 255, 255, 0.04)',
+    'rgba(94, 132, 216, 0.16)',
+    'rgba(94, 132, 216, 0.05)',
   ] as const,
   glassRaised: [
-    'rgba(255, 255, 255, 0.14)',
-    'rgba(255, 255, 255, 0.055)',
+    'rgba(94, 132, 216, 0.24)',
+    'rgba(94, 132, 216, 0.08)',
   ] as const,
   accent: ['#9BF7D0', '#5EDFC0'] as const,
-  accentDeep: ['rgba(138, 240, 196, 0.24)', 'rgba(94, 200, 220, 0.05)'] as const,
+  accentDeep: ['rgba(138, 240, 196, 0.22)', 'rgba(138, 240, 196, 0.05)'] as const,
   money: ['#FFE0AE', '#F2B878'] as const,
-  violet: ['rgba(156, 140, 255, 0.22)', 'rgba(156, 140, 255, 0.02)'] as const,
-  danger: ['rgba(255, 150, 150, 0.22)', 'rgba(255, 120, 120, 0.06)'] as const,
+  violet: ['rgba(156, 140, 255, 0.22)', 'rgba(156, 140, 255, 0.05)'] as const,
+  danger: ['rgba(255, 150, 150, 0.22)', 'rgba(255, 150, 150, 0.05)'] as const,
 } as const;
 
 export const shadows = {

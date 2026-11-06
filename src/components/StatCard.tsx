@@ -57,7 +57,12 @@ export function StatCard({
         ) : null}
       </View>
       {subtitle ? (
-        <AppText variant="small" color={colors.textMuted} numberOfLines={2}>
+        <AppText
+          variant="small"
+          color={colors.textMuted}
+          numberOfLines={2}
+          style={styles.subtitle}
+        >
           {subtitle}
         </AppText>
       ) : null}
@@ -105,5 +110,8 @@ const styles = StyleSheet.create({
   },
   unit: {
     fontWeight: '600',
+  },
+  subtitle: {
+    minHeight: 38,
   },
 });

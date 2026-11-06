@@ -31,7 +31,7 @@ const toneGradients: Record<GlassTone, readonly [string, string]> = {
   raised: gradients.glassRaised,
   accent: gradients.accentDeep,
   violet: gradients.violet,
-  money: ['rgba(255, 213, 154, 0.17)', 'rgba(255, 255, 255, 0.035)'],
+  money: ['rgba(255, 213, 154, 0.18)', 'rgba(255, 213, 154, 0.05)'],
   danger: gradients.danger,
 };
 
@@ -70,18 +70,9 @@ export function GlassSurface({
         {beautiful ? (
           <LinearGradient
             colors={toneGradients[tone]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
+            start={{ x: 0.5, y: 0 }}
+            end={{ x: 0.5, y: 1 }}
             style={StyleSheet.absoluteFill}
-            pointerEvents="none"
-          />
-        ) : null}
-        {beautiful ? (
-          <LinearGradient
-            colors={['rgba(255, 255, 255, 0.075)', 'rgba(255, 255, 255, 0)']}
-            start={{ x: 0.2, y: 0 }}
-            end={{ x: 0.8, y: 1 }}
-            style={styles.sheen}
             pointerEvents="none"
           />
         ) : null}
@@ -100,13 +91,6 @@ const styles = StyleSheet.create({
   },
   padded: {
     padding: 16,
-  },
-  sheen: {
-    height: '58%',
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
   },
   content: {
     position: 'relative',

@@ -426,13 +426,6 @@ export function MainScreen({ profile }: MainScreenProps) {
           ) : null}
         </>
       )}
-
-      <View style={styles.footnote}>
-        <AppText variant="caption" color={colors.textMuted}>
-          Все показатели — приблизительные оценки на основе введённых данных. Они
-          обновляются автоматически. Приложение не заменяет медицинскую помощь.
-        </AppText>
-      </View>
     </Screen>
   );
 }
@@ -556,6 +549,7 @@ const styles = StyleSheet.create({
     fontVariant: ['tabular-nums'],
   },
   statsGrid: {
+    alignItems: 'stretch',
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 10,
@@ -603,9 +597,5 @@ const styles = StyleSheet.create({
   },
   futureMetric: {
     gap: 2,
-  },
-  footnote: {
-    marginTop: 24,
-    paddingHorizontal: 4,
   },
 });

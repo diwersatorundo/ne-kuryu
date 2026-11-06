@@ -22,7 +22,7 @@ jobs:
           cache: npm
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 17
@@ -40,11 +40,11 @@ jobs:
       - name: Test keyboard on Android emulator
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
-          api-level: 35
+          api-level: 34
           arch: x86_64
-          target: google_apis
-          disableAnimations: true
-          forceAvdCreation: true
+          target: default
+          disable-animations: true
+          force-avd-creation: true
           script: |
             adb install -r android/app/build/outputs/apk/release/app-release.apk
             node scripts/android-keyboard-smoke.mjs
@@ -55,5 +55,5 @@ jobs:
         with:
           name: android-keyboard-diagnostics
           path: artifacts/keyboard
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 7

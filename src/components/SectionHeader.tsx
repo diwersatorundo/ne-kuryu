@@ -19,7 +19,7 @@ export function SectionHeader({
   return (
     <View style={[styles.wrapper, style]}>
       <View style={styles.textBlock}>
-        <AppText variant="h3">{title}</AppText>
+        <AppText variant="h2">{title}</AppText>
         {subtitle ? (
           <AppText variant="small" color={colors.textMuted}>
             {subtitle}
@@ -35,13 +35,14 @@ const styles = StyleSheet.create({
   wrapper: {
     alignItems: 'flex-end',
     flexDirection: 'row',
+    gap: 12,
     justifyContent: 'space-between',
     marginBottom: spacing.md,
-    marginTop: spacing.xl,
+    marginTop: spacing.xxl,
     minHeight: 24,
   },
   textBlock: {
     flex: 1,
-    gap: 2,
+    gap: 3,
   },
 });

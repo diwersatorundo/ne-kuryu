@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import { SafeAreaView, Edge } from 'react-native-safe-area-context';
-import { colors, spacing } from '../constants/theme';
+import { spacing } from '../constants/theme';
 
 interface ScreenProps {
   children: ReactNode;
@@ -56,7 +56,7 @@ export function Screen({
 
 const styles = StyleSheet.create({
   safe: {
-    backgroundColor: colors.background,
+    backgroundColor: 'transparent',
     flex: 1,
   },
   flex: {
@@ -67,8 +67,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xl,
   },
   footer: {
-    borderTopColor: colors.border,
-    borderTopWidth: 1,
     gap: spacing.sm,
     paddingBottom: spacing.md,
     paddingHorizontal: spacing.xl,

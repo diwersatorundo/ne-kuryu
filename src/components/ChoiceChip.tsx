@@ -25,7 +25,7 @@ export function ChoiceChip({ label, selected, onPress, style }: ChoiceChipProps)
       <AppText
         variant="small"
         color={selected ? colors.accent : colors.textSecondary}
-        style={selected && styles.selectedLabel}
+        style={selected ? styles.selectedLabel : undefined}
       >
         {label}
       </AppText>
@@ -37,21 +37,18 @@ const styles = StyleSheet.create({
   chip: {
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radius.sm,
-    borderWidth: 1,
+    borderRadius: radius.full,
     justifyContent: 'center',
-    minHeight: 36,
-    paddingHorizontal: 12,
+    minHeight: 38,
+    paddingHorizontal: 14,
   },
   selected: {
     backgroundColor: colors.accentSoft,
-    borderColor: colors.accentBorder,
   },
   pressed: {
     opacity: 0.7,
   },
   selectedLabel: {
-    fontWeight: '600',
+    fontWeight: '700',
   },
 });

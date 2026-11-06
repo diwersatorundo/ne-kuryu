@@ -2,6 +2,7 @@ import { LucideIcon } from 'lucide-react-native';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { colors, radius } from '../constants/theme';
 import { AppText } from './AppText';
+import { Card } from './Card';
 
 interface StatCardProps {
   title: string;
@@ -25,26 +26,26 @@ export function StatCard({
   style,
 }: StatCardProps) {
   return (
-    <View style={[styles.card, style]}>
+    <Card style={[styles.card, style]} contentStyle={styles.content}>
       <View style={styles.topRow}>
+        <View style={[styles.iconWrap, { backgroundColor: accentSoft }]}>
+          <Icon size={15} color={accent} strokeWidth={1.9} />
+        </View>
         <AppText
           variant="caption"
           color={colors.textMuted}
-          numberOfLines={2}
+          numberOfLines={1}
           style={styles.title}
         >
           {title.toUpperCase()}
         </AppText>
-        <View style={[styles.iconWrap, { backgroundColor: accentSoft }]}>
-          <Icon size={15} color={accent} strokeWidth={1.9} />
-        </View>
       </View>
       <View style={styles.valueRow}>
         <AppText
           color={colors.text}
           numberOfLines={1}
           adjustsFontSizeToFit
-          minimumFontScale={0.72}
+          minimumFontScale={0.7}
           style={styles.value}
         >
           {value}
@@ -56,27 +57,20 @@ export function StatCard({
         ) : null}
       </View>
       {subtitle ? (
-        <AppText
-          variant="small"
-          color={colors.textMuted}
-          numberOfLines={2}
-        >
+        <AppText variant="small" color={colors.textMuted} numberOfLines={2}>
           {subtitle}
         </AppText>
       ) : null}
-    </View>
+    </Card>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radius.lg,
-    borderWidth: 1,
+    minHeight: 126,
+  },
+  content: {
     gap: 10,
-    minHeight: 118,
-    padding: 13,
   },
   topRow: {
     alignItems: 'center',
@@ -84,17 +78,17 @@ const styles = StyleSheet.create({
     gap: 8,
     justifyContent: 'space-between',
   },
-  title: {
-    flex: 1,
-    letterSpacing: 0.5,
-    lineHeight: 14,
-  },
   iconWrap: {
     alignItems: 'center',
     borderRadius: radius.sm,
-    height: 26,
+    height: 28,
     justifyContent: 'center',
-    width: 26,
+    width: 28,
+  },
+  title: {
+    flex: 1,
+    textAlign: 'right',
+    letterSpacing: 0.6,
   },
   valueRow: {
     alignItems: 'baseline',
@@ -102,12 +96,12 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   value: {
-    fontSize: 24,
-    fontWeight: '700',
-    letterSpacing: -0.6,
-    lineHeight: 30,
-    fontVariant: ['tabular-nums'],
     flexShrink: 1,
+    fontSize: 27,
+    fontWeight: '700',
+    letterSpacing: -0.9,
+    lineHeight: 33,
+    fontVariant: ['tabular-nums'],
   },
   unit: {
     fontWeight: '600',

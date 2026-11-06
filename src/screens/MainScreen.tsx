@@ -6,13 +6,14 @@ import {
   Package,
   Zap,
 } from 'lucide-react-native';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import { Profile } from '../types/profile';
 import {
   calculateStats,
   ProductStats,
 } from '../calculations/calculations';
 import { PRODUCTS } from '../constants/products';
+import { getSphereDiameter } from '../constants/sphere';
 import { colors, radius } from '../constants/theme';
 import {
   formatClockDuration,
@@ -34,6 +35,7 @@ import { Card } from '../components/Card';
 import { IconTile } from '../components/IconTile';
 import { Screen } from '../components/Screen';
 import { SectionHeader } from '../components/SectionHeader';
+import { SmokeSphere } from '../components/SmokeSphere';
 import { StatCard } from '../components/StatCard';
 
 interface MainScreenProps {
@@ -159,18 +161,29 @@ function categoryDetail(stat: ProductStats): string {
 
 export function MainScreen({ profile }: MainScreenProps) {
   const now = useNow(1000);
+  const { width } = useWindowDimensions();
   const stats = calculateStats(profile, now);
   const hero = getHeroContent(profile, now);
   const motivation = getMotivation(stats.time.elapsedMs, stats.time.isFuture);
   const currency = profile.currency;
+  const sphereDays = Math.floor(stats.time.elapsedDays * 24) / 24;
+  const sphereDiameter = getSphereDiameter(
+    sphereDays,
+    width,
+    stats.time.isFuture,
+  );
+  const sphereFrameHeight = Math.max(196, Math.min(312, sphereDiameter * 0.9));
 
   return (
     <Screen edges={['top']} contentContainerStyle={styles.content}>
       <View style={styles.brandRow}>
-        <AppText variant="caption" color={colors.accent} style={styles.brand}>
-          НЕ КУРЮ
-        </AppText>
-        <View style={styles.dateMeta}>
+        <View style={styles.brandLockup}>
+          <View style={styles.brandDot} />
+          <AppText variant="caption" color={colors.accent} style={styles.brand}>
+            NICOTINY
+          </AppText>
+        </View>
+        <View style={styles.datePill}>
           <Calendar size={13} color={colors.textMuted} />
           <AppText variant="caption" color={colors.textMuted}>
             {formatDateTime(new Date(profile.quitAt))}
@@ -179,33 +192,50 @@ export function MainScreen({ profile }: MainScreenProps) {
       </View>
 
       <View style={styles.hero}>
-        <AppText variant="body" color={colors.textSecondary}>
-          {hero.eyebrow}
-        </AppText>
-        <View style={styles.heroValueRow}>
-          <AppText
-            numberOfLines={1}
-            adjustsFontSizeToFit
-            minimumFontScale={0.58}
-            style={styles.heroValue}
-          >
-            {hero.value}
-          </AppText>
-          <AppText style={styles.heroUnit}>{hero.unit}</AppText>
+        <View style={[styles.sphereFrame, { height: sphereFrameHeight }]}>
+          <SmokeSphere
+            elapsedDays={sphereDays}
+            isFuture={stats.time.isFuture}
+          />
         </View>
-        <AppText variant="small" color={colors.textMuted}>
-          {hero.subline}
-        </AppText>
-        <View style={styles.motivationRow}>
-          <View style={styles.motivationDot} />
-          <AppText variant="small" color={colors.textSecondary} style={styles.motivation}>
-            {motivation}
+
+        <View style={styles.heroContent}>
+          <AppText
+            variant="body"
+            color={colors.textSecondary}
+            style={styles.eyebrow}
+          >
+            {hero.eyebrow}
           </AppText>
+          <View style={styles.heroValueRow}>
+            <AppText
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.48}
+              style={styles.heroValue}
+            >
+              {hero.value}
+            </AppText>
+            <AppText style={styles.heroUnit}>{hero.unit}</AppText>
+          </View>
+          <AppText variant="small" color={colors.textMuted}>
+            {hero.subline}
+          </AppText>
+          <View style={styles.motivationPill}>
+            <View style={styles.motivationDot} />
+            <AppText
+              variant="small"
+              color={colors.textSecondary}
+              style={styles.motivation}
+            >
+              {motivation}
+            </AppText>
+          </View>
         </View>
       </View>
 
       {stats.time.isFuture ? (
-        <Card style={styles.futureCard}>
+        <Card tone="violet" style={styles.futureCard} radiusValue={radius.xl}>
           <View style={styles.cardHeader}>
             <AppText variant="h3">План готов</AppText>
             <Badge label="обратный отсчёт" tone="warning" />
@@ -238,9 +268,9 @@ export function MainScreen({ profile }: MainScreenProps) {
       ) : (
         <>
           {stats.dailySpend > 0 ? (
-            <View style={styles.moneyCard}>
+            <Card tone="accent" style={styles.moneyCard} radiusValue={radius.xl}>
               <View style={styles.cardHeader}>
-                <AppText variant="label" color={colors.textMuted}>
+                <AppText variant="label" color={colors.accent}>
                   СЭКОНОМЛЕНО
                 </AppText>
                 <Badge label="оценка" tone="warning" />
@@ -248,7 +278,7 @@ export function MainScreen({ profile }: MainScreenProps) {
               <AppText
                 numberOfLines={1}
                 adjustsFontSizeToFit
-                minimumFontScale={0.66}
+                minimumFontScale={0.6}
                 style={styles.moneyValue}
               >
                 {formatMoney(stats.moneySaved, currency, 1)}
@@ -257,7 +287,7 @@ export function MainScreen({ profile }: MainScreenProps) {
                 ≈ {formatMoney(stats.dailySpend, currency, 1)} в день по прежним
                 расходам
               </AppText>
-            </View>
+            </Card>
           ) : null}
 
           <View style={styles.statsGrid}>
@@ -357,44 +387,40 @@ export function MainScreen({ profile }: MainScreenProps) {
                 style={styles.categoriesHeader}
               />
               <Card padded={false} style={styles.categoryCard}>
-                {stats.productStats.map((stat, index) => {
-                  const product = PRODUCTS[stat.type];
-                  return (
-                    <View
-                      key={stat.type}
-                      style={[
-                        styles.categoryRow,
-                        index > 0 && styles.categoryDivider,
-                      ]}
-                    >
-                      <IconTile
-                        icon={product.icon}
-                        color={product.accent}
-                        background={product.accentSoft}
-                        size={38}
-                        iconSize={18}
-                      />
-                      <View style={styles.categoryText}>
-                        <AppText variant="h3">{product.shortTitle}</AppText>
-                        <AppText
-                          variant="small"
-                          color={colors.textMuted}
-                          numberOfLines={2}
-                        >
-                          {categoryDetail(stat)}
-                        </AppText>
+                <View style={styles.categoryList}>
+                  {stats.productStats.map((stat) => {
+                    const product = PRODUCTS[stat.type];
+                    return (
+                      <View key={stat.type} style={styles.categoryRow}>
+                        <IconTile
+                          icon={product.icon}
+                          color={product.accent}
+                          background={product.accentSoft}
+                          size={42}
+                          iconSize={19}
+                        />
+                        <View style={styles.categoryText}>
+                          <AppText variant="h3">{product.shortTitle}</AppText>
+                          <AppText
+                            variant="small"
+                            color={colors.textMuted}
+                            numberOfLines={2}
+                          >
+                            {categoryDetail(stat)}
+                          </AppText>
+                        </View>
+                        <View style={styles.categoryRight}>
+                          <AppText variant="bodyMedium" color={product.accent}>
+                            {formatMoney(stat.moneySaved, currency, 1)}
+                          </AppText>
+                          <AppText variant="caption" color={colors.textMuted}>
+                            ≈ {formatMoney(stat.dailySpend, currency, 1)}/день
+                          </AppText>
+                        </View>
                       </View>
-                      <View style={styles.categoryRight}>
-                        <AppText variant="bodyMedium" color={product.accent}>
-                          {formatMoney(stat.moneySaved, currency, 1)}
-                        </AppText>
-                        <AppText variant="caption" color={colors.textMuted}>
-                          ≈ {formatMoney(stat.dailySpend, currency, 1)}/день
-                        </AppText>
-                      </View>
-                    </View>
-                  );
-                })}
+                    );
+                  })}
+                </View>
               </Card>
             </View>
           ) : null}
@@ -413,72 +439,108 @@ export function MainScreen({ profile }: MainScreenProps) {
 
 const styles = StyleSheet.create({
   content: {
-    paddingBottom: 30,
-    paddingTop: 10,
+    paddingBottom: 24,
+    paddingTop: 8,
   },
   brandRow: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 24,
+    marginBottom: 4,
+    zIndex: 2,
+  },
+  brandLockup: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  brandDot: {
+    backgroundColor: colors.accent,
+    borderRadius: 4,
+    height: 8,
+    shadowColor: colors.accent,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
+    width: 8,
   },
   brand: {
     fontWeight: '700',
-    letterSpacing: 2.4,
+    letterSpacing: 3,
   },
-  dateMeta: {
+  datePill: {
     alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: radius.full,
     flexDirection: 'row',
-    gap: 5,
+    gap: 6,
+    paddingHorizontal: 11,
+    paddingVertical: 6,
   },
   hero: {
+    marginTop: 6,
+  },
+  sphereFrame: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: -18,
+  },
+  heroContent: {
+    alignItems: 'center',
     gap: 6,
+  },
+  eyebrow: {
+    textAlign: 'center',
   },
   heroValueRow: {
     alignItems: 'baseline',
     flexDirection: 'row',
-    gap: 9,
-    marginTop: -2,
+    gap: 10,
+    justifyContent: 'center',
+    maxWidth: '100%',
   },
   heroValue: {
-    color: colors.accent,
-    fontSize: 66,
-    fontWeight: '700',
-    letterSpacing: -3,
-    lineHeight: 72,
-    fontVariant: ['tabular-nums'],
+    color: colors.text,
     flexShrink: 1,
+    fontSize: 92,
+    fontVariant: ['tabular-nums'],
+    fontWeight: '700',
+    letterSpacing: -5,
+    lineHeight: 98,
+    textShadowColor: 'rgba(0, 0, 0, 0.45)',
+    textShadowOffset: { width: 0, height: 6 },
+    textShadowRadius: 22,
   },
   heroUnit: {
-    color: colors.textSecondary,
-    fontSize: 19,
-    fontWeight: '500',
-    lineHeight: 26,
+    color: colors.accent,
+    fontSize: 20,
+    fontWeight: '600',
+    lineHeight: 28,
   },
-  motivationRow: {
+  motivationPill: {
     alignItems: 'flex-start',
+    backgroundColor: colors.surface,
+    borderRadius: radius.full,
     flexDirection: 'row',
     gap: 7,
     marginTop: 8,
+    maxWidth: '100%',
+    paddingHorizontal: 13,
+    paddingVertical: 8,
   },
   motivationDot: {
     backgroundColor: colors.accent,
-    borderRadius: 2,
+    borderRadius: 3,
     height: 6,
-    marginTop: 7,
+    marginTop: 6,
     width: 6,
   },
   motivation: {
-    flex: 1,
+    flexShrink: 1,
   },
   moneyCard: {
-    backgroundColor: colors.surface,
-    borderColor: colors.accentBorder,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    gap: 5,
-    marginTop: 24,
-    padding: 15,
+    marginTop: 22,
+    gap: 6,
   },
   cardHeader: {
     alignItems: 'center',
@@ -486,11 +548,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   moneyValue: {
-    color: colors.accent,
-    fontSize: 35,
+    color: colors.text,
+    fontSize: 40,
     fontWeight: '700',
-    letterSpacing: -1.2,
-    lineHeight: 42,
+    letterSpacing: -1.6,
+    lineHeight: 46,
     fontVariant: ['tabular-nums'],
   },
   statsGrid: {
@@ -504,35 +566,36 @@ const styles = StyleSheet.create({
     width: '48%',
   },
   categories: {
-    marginTop: 4,
+    marginTop: 2,
   },
   categoriesHeader: {
-    marginTop: 22,
+    marginTop: 26,
   },
   categoryCard: {
-    overflow: 'hidden',
+    borderRadius: radius.xl,
+  },
+  categoryList: {
+    gap: 4,
+    padding: 8,
   },
   categoryRow: {
     alignItems: 'center',
+    borderRadius: radius.lg,
     flexDirection: 'row',
-    gap: 10,
-    padding: 12,
-  },
-  categoryDivider: {
-    borderTopColor: colors.border,
-    borderTopWidth: 1,
+    gap: 12,
+    padding: 10,
   },
   categoryText: {
     flex: 1,
-    gap: 1,
+    gap: 2,
   },
   categoryRight: {
     alignItems: 'flex-end',
-    gap: 1,
+    gap: 2,
   },
   futureCard: {
-    gap: 10,
     marginTop: 24,
+    gap: 10,
   },
   futureStats: {
     flexDirection: 'row',
@@ -542,7 +605,7 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   footnote: {
-    marginTop: 22,
-    paddingHorizontal: 2,
+    marginTop: 24,
+    paddingHorizontal: 4,
   },
 });

@@ -1,4 +1,5 @@
 import { Check } from 'lucide-react-native';
+import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { colors, radius } from '../constants/theme';
 import { ProductInfo } from '../constants/products';
@@ -12,14 +13,19 @@ interface SelectCardProps {
 }
 
 export function SelectCard({ product, selected, onPress }: SelectCardProps) {
+  const [focused, setFocused] = useState(false);
+
   return (
     <Pressable
       accessibilityRole="checkbox"
       accessibilityState={{ checked: selected }}
       onPress={onPress}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
       style={({ pressed }) => [
         styles.card,
         selected && styles.cardSelected,
+        focused && styles.cardFocused,
         pressed && styles.cardPressed,
       ]}
     >
@@ -27,6 +33,8 @@ export function SelectCard({ product, selected, onPress }: SelectCardProps) {
         icon={product.icon}
         color={product.accent}
         background={product.accentSoft}
+        size={44}
+        iconSize={20}
       />
       <View style={styles.textBlock}>
         <AppText variant="h3">{product.title}</AppText>
@@ -47,20 +55,24 @@ const styles = StyleSheet.create({
   card: {
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderColor: colors.border,
     borderRadius: radius.lg,
-    borderWidth: 1,
     flexDirection: 'row',
     gap: 12,
-    minHeight: 66,
+    minHeight: 72,
     padding: 12,
   },
   cardSelected: {
     backgroundColor: colors.surfaceRaised,
-    borderColor: colors.accentBorder,
   },
   cardPressed: {
     opacity: 0.78,
+  },
+  cardFocused: {
+    elevation: 8,
+    shadowColor: colors.accent,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
   },
   textBlock: {
     flex: 1,
@@ -68,15 +80,13 @@ const styles = StyleSheet.create({
   },
   check: {
     alignItems: 'center',
-    borderColor: colors.borderStrong,
-    borderRadius: radius.sm,
-    borderWidth: 1,
-    height: 22,
+    backgroundColor: 'rgba(255, 255, 255, 0.07)',
+    borderRadius: radius.full,
+    height: 24,
     justifyContent: 'center',
-    width: 22,
+    width: 24,
   },
   checkSelected: {
     backgroundColor: colors.accent,
-    borderColor: colors.accent,
   },
 });

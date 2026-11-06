@@ -104,15 +104,13 @@ export function NumberField({
 
 const styles = StyleSheet.create({
   unknownChip: {
-    borderColor: colors.border,
-    borderRadius: radius.sm,
-    borderWidth: 1,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
+    backgroundColor: colors.surface,
+    borderRadius: radius.full,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
   },
   unknownChipActive: {
     backgroundColor: colors.accentSoft,
-    borderColor: colors.accentBorder,
   },
   unknownChipPressed: {
     opacity: 0.7,

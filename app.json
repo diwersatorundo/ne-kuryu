@@ -1,25 +1,27 @@
 {
   "expo": {
-    "name": "Не курю",
+    "name": "Nicotiny",
     "slug": "ne-kuryu",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "backgroundColor": "#0B0D0C",
+    "backgroundColor": "#0A0C10",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.nekuryu.app"
+      "bundleIdentifier": "com.nekuryu.app",
+      "buildNumber": "2"
     },
     "android": {
       "package": "com.nekuryu.app",
       "adaptiveIcon": {
-        "backgroundColor": "#0B0D0C",
+        "backgroundColor": "#0A0C10",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "softwareKeyboardLayoutMode": "resize"
+      "softwareKeyboardLayoutMode": "resize",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -31,9 +33,10 @@
           "image": "./assets/splash-icon.png",
           "imageWidth": 220,
           "resizeMode": "contain",
-          "backgroundColor": "#0B0D0C"
+          "backgroundColor": "#0A0C10"
         }
       ]
-    ]
+    ],
+    "description": "Nicotiny — минималистичный трекер отказа от курения со сферой дыма, которая уменьшается со временем."
   }
 }

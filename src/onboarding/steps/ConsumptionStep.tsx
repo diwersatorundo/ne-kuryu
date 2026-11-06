@@ -330,11 +330,9 @@ const styles = StyleSheet.create({
   },
   preview: {
     backgroundColor: colors.surface,
-    borderColor: colors.border,
     borderRadius: radius.lg,
-    borderWidth: 1,
     gap: 4,
-    padding: 13,
+    padding: 14,
   },
   previewTop: {
     alignItems: 'center',

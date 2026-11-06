@@ -178,7 +178,6 @@ export function SummaryStep({
               {formatMoney(dailySpend, currency, 1)}
             </AppText>
           </View>
-          <View style={styles.metricDivider} />
           <View style={styles.metric}>
             <AppText variant="caption" color={colors.textMuted}>
               ЗА 30 ДНЕЙ
@@ -284,12 +283,10 @@ const styles = StyleSheet.create({
   productRow: {
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderColor: colors.border,
     borderRadius: radius.lg,
-    borderWidth: 1,
     flexDirection: 'row',
-    gap: 10,
-    padding: 10,
+    gap: 12,
+    padding: 12,
   },
   productText: {
     flex: 1,
@@ -308,11 +305,10 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   metric: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
     flex: 1,
     gap: 3,
-  },
-  metricDivider: {
-    backgroundColor: colors.border,
-    width: 1,
+    padding: 12,
   },
 });

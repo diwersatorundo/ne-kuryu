@@ -22,12 +22,10 @@ const styles = StyleSheet.create({
   box: {
     alignItems: 'flex-start',
     backgroundColor: colors.dangerSoft,
-    borderColor: colors.dangerBorder,
     borderRadius: radius.md,
-    borderWidth: 1,
     flexDirection: 'row',
     gap: 8,
-    padding: 10,
+    padding: 12,
   },
   text: {
     flex: 1,

@@ -144,13 +144,11 @@ const styles = StyleSheet.create({
   intro: {
     alignItems: 'flex-start',
     backgroundColor: colors.accentSoft,
-    borderColor: colors.accentBorder,
-    borderRadius: radius.md,
-    borderWidth: 1,
+    borderRadius: radius.lg,
     flexDirection: 'row',
     gap: 9,
     marginBottom: spacing.md,
-    padding: 12,
+    padding: 14,
   },
   introText: {
     flex: 1,
@@ -163,12 +161,10 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   formula: {
-    backgroundColor: colors.backgroundElevated,
-    borderColor: colors.border,
+    backgroundColor: colors.surface,
     borderRadius: radius.sm,
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
   },
   formulaText: {
     fontWeight: '500',

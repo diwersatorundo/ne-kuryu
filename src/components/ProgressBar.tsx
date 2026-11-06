@@ -1,6 +1,7 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { colors, radius } from '../constants/theme';
+import { gradients, radius } from '../constants/theme';
 
 interface ProgressBarProps {
   progress: number;
@@ -13,7 +14,7 @@ export function ProgressBar({ progress }: ProgressBarProps) {
   useEffect(() => {
     Animated.timing(value, {
       toValue: clamped,
-      duration: 220,
+      duration: 320,
       useNativeDriver: false,
     }).start();
   }, [clamped, value]);
@@ -25,22 +26,29 @@ export function ProgressBar({ progress }: ProgressBarProps) {
 
   return (
     <View style={styles.track}>
-      <Animated.View style={[styles.fill, { width }]} />
+      <Animated.View style={[styles.fill, { width }]}>
+        <LinearGradient
+          colors={gradients.accent}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={StyleSheet.absoluteFill}
+        />
+      </Animated.View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   track: {
-    backgroundColor: colors.border,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderRadius: radius.full,
-    height: 4,
+    height: 5,
     overflow: 'hidden',
     width: '100%',
   },
   fill: {
-    backgroundColor: colors.accent,
     borderRadius: radius.full,
     height: '100%',
+    overflow: 'hidden',
   },
 });

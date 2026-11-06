@@ -1,5 +1,5 @@
 import { ChevronLeft } from 'lucide-react-native';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { colors, radius } from '../constants/theme';
 import { AppText } from './AppText';
@@ -17,6 +17,8 @@ export function ScreenHeader({
   onBack,
   right,
 }: ScreenHeaderProps) {
+  const [focused, setFocused] = useState(false);
+
   return (
     <View style={styles.wrapper}>
       <View style={styles.row}>
@@ -25,9 +27,12 @@ export function ScreenHeader({
             accessibilityRole="button"
             accessibilityLabel="Назад"
             onPress={onBack}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
             hitSlop={8}
             style={({ pressed }) => [
               styles.backButton,
+              focused && styles.backFocused,
               pressed && styles.backPressed,
             ]}
           >
@@ -50,29 +55,34 @@ export function ScreenHeader({
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginBottom: 18,
+    marginBottom: 20,
     paddingTop: 8,
   },
   row: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 10,
+    gap: 12,
   },
   textBlock: {
     flex: 1,
-    gap: 2,
+    gap: 3,
   },
   backButton: {
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radius.sm,
-    borderWidth: 1,
-    height: 38,
+    borderRadius: radius.full,
+    height: 42,
     justifyContent: 'center',
-    width: 38,
+    width: 42,
   },
   backPressed: {
     backgroundColor: colors.surfaceRaised,
+  },
+  backFocused: {
+    elevation: 6,
+    shadowColor: colors.accent,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
   },
 });

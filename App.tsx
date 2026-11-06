@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
+import { BlurTargetView } from 'expo-blur';
+import { ComponentRef, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   BackHandler,
@@ -9,6 +10,8 @@ import {
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { colors } from './src/constants/theme';
 import { AppText } from './src/components/AppText';
+import { AtmosphereBackground } from './src/components/AtmosphereBackground';
+import { PreferencesProvider } from './src/context/PreferencesContext';
 import { useProfile } from './src/hooks/useProfile';
 import { OnboardingFlow } from './src/onboarding/OnboardingFlow';
 import { TabBar, TabKey } from './src/navigation/TabBar';
@@ -22,6 +25,7 @@ export default function App() {
   const { profile, loading, persist, reset } = useProfile();
   const [tab, setTab] = useState<TabKey>('home');
   const [editing, setEditing] = useState<EditingState>(null);
+  const blurTargetRef = useRef<ComponentRef<typeof View> | null>(null);
 
   useEffect(() => {
     if (!profile || editing || tab !== 'settings') {
@@ -49,40 +53,54 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <StatusBar style="light" />
-      <View style={styles.root}>
-        {loading ? (
-          <View style={styles.loading}>
-            <AppText variant="caption" color={colors.accent} style={styles.brand}>
-              НЕ КУРЮ
-            </AppText>
-            <ActivityIndicator color={colors.accent} />
-          </View>
-        ) : !profile ? (
-          <OnboardingFlow initialProfile={null} onComplete={handleComplete} />
-        ) : editing ? (
-          <OnboardingFlow
-            initialProfile={profile}
-            initialStep={editing}
-            onComplete={handleComplete}
-            onCancel={() => setEditing(null)}
-          />
-        ) : (
-          <>
-            {tab === 'home' ? (
-              <MainScreen profile={profile} />
-            ) : (
-              <SettingsScreen
-                profile={profile}
-                onEditProfile={() => setEditing('profile')}
-                onEditProducts={() => setEditing('products')}
-                onReset={handleReset}
+      <PreferencesProvider>
+        <StatusBar style="light" />
+        <View style={styles.root}>
+          <AtmosphereBackground />
+          {loading ? (
+            <View style={styles.loading}>
+              <View style={styles.brandMark} />
+              <AppText
+                variant="caption"
+                color={colors.accent}
+                style={styles.brand}
+              >
+                NICOTINY
+              </AppText>
+              <ActivityIndicator color={colors.accent} />
+            </View>
+          ) : !profile ? (
+            <OnboardingFlow initialProfile={null} onComplete={handleComplete} />
+          ) : editing ? (
+            <OnboardingFlow
+              initialProfile={profile}
+              initialStep={editing}
+              onComplete={handleComplete}
+              onCancel={() => setEditing(null)}
+            />
+          ) : (
+            <>
+              <BlurTargetView ref={blurTargetRef} style={styles.flex}>
+                {tab === 'home' ? (
+                  <MainScreen profile={profile} />
+                ) : (
+                  <SettingsScreen
+                    profile={profile}
+                    onEditProfile={() => setEditing('profile')}
+                    onEditProducts={() => setEditing('products')}
+                    onReset={handleReset}
+                  />
+                )}
+              </BlurTargetView>
+              <TabBar
+                active={tab}
+                onChange={setTab}
+                blurTarget={blurTargetRef}
               />
-            )}
-            <TabBar active={tab} onChange={setTab} />
-          </>
-        )}
-      </View>
+            </>
+          )}
+        </View>
+      </PreferencesProvider>
     </SafeAreaProvider>
   );
 }
@@ -92,14 +110,28 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     flex: 1,
   },
+  flex: {
+    flex: 1,
+  },
   loading: {
     alignItems: 'center',
     flex: 1,
-    gap: 16,
+    gap: 14,
     justifyContent: 'center',
+  },
+  brandMark: {
+    backgroundColor: colors.accent,
+    borderRadius: 26,
+    height: 52,
+    opacity: 0.9,
+    shadowColor: colors.accent,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.6,
+    shadowRadius: 30,
+    width: 52,
   },
   brand: {
     fontWeight: '700',
-    letterSpacing: 2.6,
+    letterSpacing: 4,
   },
 });

@@ -1,29 +1,33 @@
 import { ReactNode } from 'react';
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
-import { colors, radius } from '../constants/theme';
+import { StyleProp, ViewStyle } from 'react-native';
+import { GlassSurface, GlassTone } from './GlassSurface';
 
 interface CardProps {
   children: ReactNode;
   style?: StyleProp<ViewStyle>;
+  contentStyle?: StyleProp<ViewStyle>;
   padded?: boolean;
+  tone?: GlassTone;
+  radiusValue?: number;
 }
 
-export function Card({ children, style, padded = true }: CardProps) {
+export function Card({
+  children,
+  style,
+  contentStyle,
+  padded = true,
+  tone = 'default',
+  radiusValue,
+}: CardProps) {
   return (
-    <View style={[styles.card, padded && styles.padded, style]}>
+    <GlassSurface
+      tone={tone}
+      padded={padded}
+      style={style}
+      contentStyle={contentStyle}
+      radiusValue={radiusValue}
+    >
       {children}
-    </View>
+    </GlassSurface>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderWidth: 1,
-    borderRadius: radius.lg,
-  },
-  padded: {
-    padding: 14,
-  },
-});

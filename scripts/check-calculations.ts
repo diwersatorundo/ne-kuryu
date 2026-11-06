@@ -2,6 +2,11 @@ import assert from 'node:assert/strict';
 import { calculateProductStats, calculateStats, getTimeState } from '../src/calculations/calculations';
 import { Profile, ProductConfig } from '../src/types/profile';
 import { MS_DAY } from '../src/utils/date';
+import {
+  SPHERE_CONFIG,
+  getSphereDiameter,
+  getSphereGrowth,
+} from '../src/constants/sphere';
 import { formatMl, formatMoney, formatNumber, pluralRu } from '../src/utils/format';
 import {
   hasErrors,
@@ -177,5 +182,15 @@ assert.equal(formatMoney(200.5, 'RUB', 1), '200,5\u00A0₽');
 assert.equal(formatMl(3), '3\u00A0мл');
 assert.equal(pluralRu(21, 'сигарета', 'сигареты', 'сигарет'), 'сигарета');
 assert.equal(pluralRu(11, 'сигарета', 'сигареты', 'сигарет'), 'сигарет');
+
+assert.ok(Math.abs(getSphereGrowth(0) - 1) < 1e-9);
+assert.equal(getSphereGrowth(0, true), 1);
+const sphereDay0 = getSphereDiameter(0, 400);
+const sphereDay30 = getSphereDiameter(30, 400);
+const sphereDay365 = getSphereDiameter(365, 400);
+assert.ok(sphereDay0 > sphereDay30);
+assert.ok(sphereDay30 > sphereDay365);
+assert.ok(sphereDay365 >= SPHERE_CONFIG.minDiameter - 1e-9);
+assert.ok(Math.abs(sphereDay0 - Math.min(400 * SPHERE_CONFIG.maxDiameterRatio, SPHERE_CONFIG.maxDiameterCap)) < 1e-9);
 
 console.log('All calculation and validation checks passed.');

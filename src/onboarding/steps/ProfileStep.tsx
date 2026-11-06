@@ -113,12 +113,10 @@ const styles = StyleSheet.create({
   note: {
     alignItems: 'flex-start',
     backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radius.md,
-    borderWidth: 1,
+    borderRadius: radius.lg,
     flexDirection: 'row',
     gap: 9,
-    padding: 11,
+    padding: 14,
   },
   noteText: {
     flex: 1,

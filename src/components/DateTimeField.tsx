@@ -22,6 +22,7 @@ export function DateTimeField({
   error,
 }: DateTimeFieldProps) {
   const [visible, setVisible] = useState(false);
+  const [focused, setFocused] = useState(false);
   const now = useNow(60_000);
   const isFuture = value.getTime() > now.getTime();
 
@@ -42,8 +43,11 @@ export function DateTimeField({
       <Pressable
         accessibilityRole="button"
         onPress={() => setVisible(true)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
         style={({ pressed }) => [
           styles.field,
+          focused && styles.fieldFocused,
           Boolean(error) && styles.fieldError,
           pressed && styles.fieldPressed,
         ]}
@@ -95,20 +99,26 @@ const styles = StyleSheet.create({
   field: {
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderColor: colors.border,
     borderRadius: radius.md,
-    borderWidth: 1,
     flexDirection: 'row',
     gap: 10,
-    minHeight: 62,
-    paddingHorizontal: 12,
+    minHeight: 66,
+    paddingHorizontal: 14,
     paddingVertical: 10,
   },
   fieldPressed: {
     backgroundColor: colors.surfaceRaised,
   },
+  fieldFocused: {
+    backgroundColor: colors.surfaceRaised,
+    elevation: 6,
+    shadowColor: colors.accent,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.22,
+    shadowRadius: 12,
+  },
   fieldError: {
-    borderColor: colors.dangerBorder,
+    backgroundColor: colors.dangerSoft,
   },
   iconGroup: {
     flexDirection: 'row',

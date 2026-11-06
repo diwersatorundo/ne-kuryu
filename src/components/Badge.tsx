@@ -2,7 +2,7 @@ import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { colors, radius } from '../constants/theme';
 import { AppText } from './AppText';
 
-type BadgeTone = 'neutral' | 'accent' | 'warning' | 'danger';
+type BadgeTone = 'neutral' | 'accent' | 'warning' | 'danger' | 'violet';
 
 interface BadgeProps {
   label: string;
@@ -10,26 +10,26 @@ interface BadgeProps {
   style?: StyleProp<ViewStyle>;
 }
 
-const palette: Record<BadgeTone, { background: string; border: string; text: string }> = {
+const palette: Record<BadgeTone, { background: string; text: string }> = {
   neutral: {
-    background: colors.surfaceRaised,
-    border: colors.border,
+    background: 'rgba(255, 255, 255, 0.08)',
     text: colors.textSecondary,
   },
   accent: {
     background: colors.accentSoft,
-    border: colors.accentBorder,
     text: colors.accent,
   },
   warning: {
     background: colors.warningSoft,
-    border: '#4A3E28',
     text: colors.warning,
   },
   danger: {
     background: colors.dangerSoft,
-    border: colors.dangerBorder,
     text: colors.danger,
+  },
+  violet: {
+    background: colors.violetSoft,
+    text: colors.violet,
   },
 };
 
@@ -39,10 +39,7 @@ export function Badge({ label, tone = 'neutral', style }: BadgeProps) {
     <View
       style={[
         styles.badge,
-        {
-          backgroundColor: tonePalette.background,
-          borderColor: tonePalette.border,
-        },
+        { backgroundColor: tonePalette.background },
         style,
       ]}
     >
@@ -56,9 +53,8 @@ export function Badge({ label, tone = 'neutral', style }: BadgeProps) {
 const styles = StyleSheet.create({
   badge: {
     alignSelf: 'flex-start',
-    borderRadius: radius.xs,
-    borderWidth: 1,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
+    borderRadius: radius.full,
+    paddingHorizontal: 9,
+    paddingVertical: 4,
   },
 });

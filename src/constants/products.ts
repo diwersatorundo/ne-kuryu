@@ -33,8 +33,8 @@ export const PRODUCTS: Record<ProductType, ProductInfo> = {
     shortTitle: 'Сигареты',
     description: 'Сигареты в пачках',
     icon: Cigarette,
-    accent: '#E3B878',
-    accentSoft: '#272116',
+    accent: '#F5C47C',
+    accentSoft: 'rgba(245, 196, 124, 0.14)',
   },
   prefilledPods: {
     type: 'prefilledPods',
@@ -42,8 +42,8 @@ export const PRODUCTS: Record<ProductType, ProductInfo> = {
     shortTitle: 'POD-картриджи',
     description: 'Предзаправленные картриджи',
     icon: Package,
-    accent: '#8CC9E8',
-    accentSoft: '#17242A',
+    accent: '#7CD8F0',
+    accentSoft: 'rgba(124, 216, 240, 0.14)',
   },
   refillablePods: {
     type: 'refillablePods',
@@ -51,8 +51,8 @@ export const PRODUCTS: Record<ProductType, ProductInfo> = {
     shortTitle: 'POD-системы',
     description: 'Перезаправляемые POD-системы',
     icon: Droplets,
-    accent: '#AAB7F2',
-    accentSoft: '#1E2030',
+    accent: '#A9A0FF',
+    accentSoft: 'rgba(169, 160, 255, 0.14)',
   },
   disposables: {
     type: 'disposables',
@@ -60,8 +60,8 @@ export const PRODUCTS: Record<ProductType, ProductInfo> = {
     shortTitle: 'Одноразки',
     description: 'Готовые одноразовые устройства',
     icon: Zap,
-    accent: '#EAA4A4',
-    accentSoft: '#2B1D1D',
+    accent: '#FF9E9E',
+    accentSoft: 'rgba(255, 158, 158, 0.14)',
   },
   refillableVapes: {
     type: 'refillableVapes',
@@ -69,8 +69,8 @@ export const PRODUCTS: Record<ProductType, ProductInfo> = {
     shortTitle: 'Вейпы',
     description: 'Перезаправляемые устройства',
     icon: Wind,
-    accent: '#9DD9A9',
-    accentSoft: '#1B261E',
+    accent: '#8AF0C4',
+    accentSoft: 'rgba(138, 240, 196, 0.14)',
   },
   heatedTobacco: {
     type: 'heatedTobacco',
@@ -78,8 +78,8 @@ export const PRODUCTS: Record<ProductType, ProductInfo> = {
     shortTitle: 'Нагревание табака',
     description: 'Системы нагревания табака',
     icon: Flame,
-    accent: '#E9B78E',
-    accentSoft: '#2A2119',
+    accent: '#F0B58A',
+    accentSoft: 'rgba(240, 181, 138, 0.14)',
   },
 };
 

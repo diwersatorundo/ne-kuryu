@@ -1,3 +1,4 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { X } from 'lucide-react-native';
 import { ReactNode } from 'react';
 import {
@@ -57,9 +58,19 @@ export function AppModal({
           style={[
             styles.sheet,
             shadows.modal,
-            { paddingBottom: Math.max(insets.bottom, 14) },
+            { paddingBottom: Math.max(insets.bottom, 16) },
           ]}
         >
+          <LinearGradient
+            colors={[
+              'rgba(255, 255, 255, 0.075)',
+              'rgba(255, 255, 255, 0.015)',
+            ]}
+            start={{ x: 0.1, y: 0 }}
+            end={{ x: 0.9, y: 1 }}
+            style={StyleSheet.absoluteFill}
+            pointerEvents="none"
+          />
           <View style={styles.handle} />
           {title ? (
             <View style={styles.header}>
@@ -114,32 +125,31 @@ const styles = StyleSheet.create({
     top: 0,
   },
   sheet: {
-    backgroundColor: colors.backgroundElevated,
-    borderColor: colors.border,
-    borderTopLeftRadius: radius.xl,
-    borderTopRightRadius: radius.xl,
-    borderWidth: 1,
+    alignSelf: 'center',
+    backgroundColor: colors.surfaceSolid,
+    borderTopLeftRadius: radius.xxl,
+    borderTopRightRadius: radius.xxl,
     maxHeight: '92%',
     maxWidth: 560,
+    overflow: 'hidden',
     paddingTop: 8,
-    alignSelf: 'center',
     width: '100%',
   },
   handle: {
     alignSelf: 'center',
-    backgroundColor: colors.borderStrong,
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
     borderRadius: radius.full,
-    height: 3,
-    marginBottom: 10,
-    width: 34,
+    height: 4,
+    marginBottom: 12,
+    width: 38,
   },
   header: {
     alignItems: 'flex-start',
     flexDirection: 'row',
     gap: 12,
     justifyContent: 'space-between',
-    paddingBottom: 12,
-    paddingHorizontal: 20,
+    paddingBottom: 14,
+    paddingHorizontal: 22,
   },
   headerText: {
     flex: 1,
@@ -148,12 +158,10 @@ const styles = StyleSheet.create({
   closeButton: {
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radius.sm,
-    borderWidth: 1,
-    height: 34,
+    borderRadius: radius.full,
+    height: 36,
     justifyContent: 'center',
-    width: 34,
+    width: 36,
   },
   closePressed: {
     backgroundColor: colors.surfaceRaised,
@@ -162,15 +170,13 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   content: {
-    paddingHorizontal: 20,
     paddingBottom: 8,
+    paddingHorizontal: 22,
   },
   footer: {
-    borderTopColor: colors.border,
-    borderTopWidth: 1,
     gap: 8,
-    marginTop: 8,
-    paddingHorizontal: 20,
-    paddingTop: 12,
+    marginTop: 10,
+    paddingHorizontal: 22,
+    paddingTop: 14,
   },
 });

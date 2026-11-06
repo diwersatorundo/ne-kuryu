@@ -295,7 +295,7 @@ export function OnboardingFlow({
       <View style={styles.header}>
         <View style={styles.brandRow}>
           <AppText variant="caption" color={colors.accent} style={styles.brand}>
-            НЕ КУРЮ
+            NICOTINY
           </AppText>
           {isEditing && onCancel ? (
             <Pressable
@@ -369,18 +369,16 @@ const styles = StyleSheet.create({
     minHeight: 28,
   },
   brand: {
-    letterSpacing: 2.4,
+    letterSpacing: 3,
     fontWeight: '700',
   },
   closeButton: {
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: 5,
-    borderWidth: 1,
-    height: 30,
+    borderRadius: 15,
+    height: 32,
     justifyContent: 'center',
-    width: 30,
+    width: 32,
   },
   pressed: {
     opacity: 0.65,

@@ -4,6 +4,7 @@ import {
   Database,
   Pencil,
   Plus,
+  Sparkles,
   Trash2,
 } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
@@ -17,18 +18,16 @@ import {
   getTimeState,
 } from '../calculations/calculations';
 import { formatDateTime } from '../utils/date';
-import {
-  formatDayLabel,
-  formatMoney,
-  pluralRu,
-} from '../utils/format';
+import { formatDayLabel, formatMoney, pluralRu } from '../utils/format';
 import { describeConsumption } from '../utils/describeProduct';
+import { usePreferences } from '../context/PreferencesContext';
 import { AppModal } from '../components/AppModal';
 import { AppText } from '../components/AppText';
 import { Badge } from '../components/Badge';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { IconTile } from '../components/IconTile';
+import { ModeSwitcher } from '../components/ModeSwitcher';
 import { Screen } from '../components/Screen';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { SectionHeader } from '../components/SectionHeader';
@@ -47,6 +46,7 @@ export function SettingsScreen({
   onEditProducts,
   onReset,
 }: SettingsScreenProps) {
+  const { mode, setMode } = usePreferences();
   const [explanationVisible, setExplanationVisible] = useState(false);
   const [resetVisible, setResetVisible] = useState(false);
 
@@ -81,15 +81,12 @@ export function SettingsScreen({
 
   return (
     <Screen edges={['top']} contentContainerStyle={styles.content}>
-      <ScreenHeader
-        title="Настройки"
-        subtitle="Профиль, продукты и данные"
-      />
+      <ScreenHeader title="Настройки" subtitle="Профиль, продукты и данные" />
 
-      <Card style={styles.profileCard}>
+      <Card tone="accent" style={styles.profileCard} radiusValue={radius.xl}>
         <View style={styles.profileTop}>
           <View style={styles.profileText}>
-            <AppText variant="label" color={colors.textMuted}>
+            <AppText variant="label" color={colors.accent}>
               ПРОФИЛЬ
             </AppText>
             <AppText variant="h2">{profile.name.trim() || 'Без имени'}</AppText>
@@ -97,21 +94,21 @@ export function SettingsScreen({
           <Badge label={daysLabel} tone="accent" />
         </View>
 
-        <View style={styles.divider} />
-
-        <InfoRow
-          label="Дата отказа"
-          value={formatDateTime(new Date(profile.quitAt))}
-        />
-        <InfoRow label="Валюта" value={`${symbol} · ${currency}`} />
-        <InfoRow
-          label="Прежний расход"
-          value={
-            dailySpend > 0
-              ? `≈ ${formatMoney(dailySpend, currency, 1)} в день`
-              : 'Недостаточно данных'
-          }
-        />
+        <View style={styles.infoList}>
+          <InfoRow
+            label="Дата отказа"
+            value={formatDateTime(new Date(profile.quitAt))}
+          />
+          <InfoRow label="Валюта" value={`${symbol} · ${currency}`} />
+          <InfoRow
+            label="Прежний расход"
+            value={
+              dailySpend > 0
+                ? `≈ ${formatMoney(dailySpend, currency, 1)} в день`
+                : 'Недостаточно данных'
+            }
+          />
+        </View>
 
         <Button
           label="Изменить профиль"
@@ -121,6 +118,15 @@ export function SettingsScreen({
           style={styles.profileButton}
         />
       </Card>
+
+      <View style={styles.section}>
+        <SectionHeader
+          title="Внешний вид"
+          subtitle="Режим визуальных эффектов"
+          style={styles.sectionHeader}
+        />
+        <ModeSwitcher mode={mode} onChange={setMode} />
+      </View>
 
       <View style={styles.section}>
         <SectionHeader
@@ -168,8 +174,8 @@ export function SettingsScreen({
                   icon={product.icon}
                   color={product.accent}
                   background={product.accentSoft}
-                  size={38}
-                  iconSize={18}
+                  size={42}
+                  iconSize={19}
                 />
                 <View style={styles.productText}>
                   <AppText variant="h3">{product.title}</AppText>
@@ -204,10 +210,7 @@ export function SettingsScreen({
       </View>
 
       <View style={styles.section}>
-        <SectionHeader
-          title="Данные и расчёты"
-          style={styles.sectionHeader}
-        />
+        <SectionHeader title="Данные и расчёты" style={styles.sectionHeader} />
         <Pressable
           accessibilityRole="button"
           onPress={() => setExplanationVisible(true)}
@@ -220,8 +223,8 @@ export function SettingsScreen({
             icon={Calculator}
             color={colors.accent}
             background={colors.accentSoft}
-            size={38}
-            iconSize={18}
+            size={42}
+            iconSize={19}
           />
           <View style={styles.menuText}>
             <AppText variant="h3">Как считаются показатели</AppText>
@@ -238,7 +241,11 @@ export function SettingsScreen({
         <Card style={styles.storageCard}>
           <View style={styles.storageTop}>
             <Database size={17} color={colors.textMuted} />
-            <AppText variant="small" color={colors.textSecondary} style={styles.storageText}>
+            <AppText
+              variant="small"
+              color={colors.textSecondary}
+              style={styles.storageText}
+            >
               Данные хранятся только на этом устройстве. Работает без интернета и
               без аккаунта.
             </AppText>
@@ -254,9 +261,12 @@ export function SettingsScreen({
       </View>
 
       <View style={styles.footer}>
-        <AppText variant="caption" color={colors.textMuted}>
-          «Не курю» · версия 1.0
-        </AppText>
+        <View style={styles.footerBrand}>
+          <Sparkles size={13} color={colors.accent} />
+          <AppText variant="caption" color={colors.textMuted}>
+            Nicotiny · версия 1.0
+          </AppText>
+        </View>
         <AppText variant="caption" color={colors.textMuted}>
           Приложение не заменяет медицинскую помощь.
         </AppText>
@@ -313,11 +323,11 @@ function InfoRow({ label, value }: { label: string; value: string }) {
 
 const styles = StyleSheet.create({
   content: {
-    paddingBottom: 28,
-    paddingTop: 10,
+    paddingBottom: 24,
+    paddingTop: 8,
   },
   profileCard: {
-    gap: 10,
+    gap: 14,
   },
   profileTop: {
     alignItems: 'center',
@@ -327,12 +337,10 @@ const styles = StyleSheet.create({
   },
   profileText: {
     flex: 1,
-    gap: 2,
+    gap: 3,
   },
-  divider: {
-    backgroundColor: colors.border,
-    height: 1,
-    marginVertical: 2,
+  infoList: {
+    gap: 9,
   },
   infoRow: {
     alignItems: 'flex-start',
@@ -345,14 +353,14 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   profileButton: {
-    marginTop: 4,
+    marginTop: 2,
   },
   section: {
     marginTop: 2,
   },
   sectionHeader: {
-    marginTop: spacing.xl,
-    marginBottom: 10,
+    marginBottom: 12,
+    marginTop: spacing.xxl,
   },
   linkButton: {
     alignItems: 'center',
@@ -368,16 +376,14 @@ const styles = StyleSheet.create({
   productRow: {
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderColor: colors.border,
     borderRadius: radius.lg,
-    borderWidth: 1,
     flexDirection: 'row',
-    gap: 10,
-    padding: 10,
+    gap: 12,
+    padding: 12,
   },
   productText: {
     flex: 1,
-    gap: 1,
+    gap: 2,
   },
   productRight: {
     alignItems: 'flex-end',
@@ -389,19 +395,17 @@ const styles = StyleSheet.create({
   menuRow: {
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderColor: colors.border,
     borderRadius: radius.lg,
-    borderWidth: 1,
     flexDirection: 'row',
-    gap: 10,
-    padding: 10,
+    gap: 12,
+    padding: 12,
   },
   menuText: {
     flex: 1,
-    gap: 1,
+    gap: 2,
   },
   storageCard: {
-    gap: 12,
+    gap: 14,
   },
   storageTop: {
     alignItems: 'flex-start',
@@ -412,9 +416,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   footer: {
-    gap: 4,
-    marginTop: 26,
+    gap: 5,
+    marginTop: 28,
     paddingHorizontal: 2,
+  },
+  footerBrand: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 6,
   },
   modalFooter: {
     flexDirection: 'row',

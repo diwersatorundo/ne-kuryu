@@ -57,7 +57,7 @@ export function Button({
   icon,
   style,
 }: ButtonProps) {
-  const { mode } = usePreferences();
+  const { mode, reducedMotion } = usePreferences();
   const [focused, setFocused] = useState(false);
   const isDisabled = disabled || loading;
   const isPrimary = variant === 'primary';
@@ -80,6 +80,7 @@ export function Button({
             : backgrounds[variant],
         },
         pressed && styles.pressed,
+        pressed && !reducedMotion && styles.pressedMotion,
         focused && styles.focused,
         isDisabled && styles.disabled,
         style,
@@ -138,6 +139,8 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.82,
+  },
+  pressedMotion: {
     transform: [{ scale: 0.985 }],
   },
   focused: {

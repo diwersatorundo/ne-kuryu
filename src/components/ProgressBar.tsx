@@ -2,22 +2,31 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import { gradients, radius } from '../constants/theme';
+import { usePreferences } from '../context/PreferencesContext';
 
 interface ProgressBarProps {
   progress: number;
 }
 
 export function ProgressBar({ progress }: ProgressBarProps) {
+  const { reducedMotion } = usePreferences();
   const [value] = useState(() => new Animated.Value(0));
   const clamped = Math.min(1, Math.max(0, progress));
 
   useEffect(() => {
-    Animated.timing(value, {
+    if (reducedMotion) {
+      value.stopAnimation();
+      value.setValue(clamped);
+      return;
+    }
+    const animation = Animated.timing(value, {
       toValue: clamped,
       duration: 320,
       useNativeDriver: false,
-    }).start();
-  }, [clamped, value]);
+    });
+    animation.start();
+    return () => animation.stop();
+  }, [clamped, reducedMotion, value]);
 
   const width = value.interpolate({
     inputRange: [0, 1],

@@ -32,6 +32,7 @@ import { Screen } from '../components/Screen';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { SectionHeader } from '../components/SectionHeader';
 import { ExplanationScreen } from './ExplanationScreen';
+import appConfig from '../../app.json';
 
 interface SettingsScreenProps {
   profile: Profile;
@@ -264,7 +265,7 @@ export function SettingsScreen({
         <View style={styles.footerBrand}>
           <Sparkles size={13} color={colors.accent} />
           <AppText variant="caption" color={colors.textMuted}>
-            Nicotiny · версия 1.0
+            Nicotiny · версия {appConfig.expo.version}
           </AppText>
         </View>
         <AppText variant="caption" color={colors.textMuted}>

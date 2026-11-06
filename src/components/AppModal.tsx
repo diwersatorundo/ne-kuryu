@@ -4,7 +4,6 @@ import { ReactNode } from 'react';
 import {
   KeyboardAvoidingView,
   Modal,
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -12,6 +11,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, radius, shadows } from '../constants/theme';
+import { usePreferences } from '../context/PreferencesContext';
 import { AppText } from './AppText';
 
 interface AppModalProps {
@@ -36,20 +36,18 @@ export function AppModal({
   onShow,
 }: AppModalProps) {
   const insets = useSafeAreaInsets();
+  const { reducedMotion } = usePreferences();
 
   return (
     <Modal
       visible={visible}
       transparent
-      animationType="fade"
+      animationType={reducedMotion ? 'none' : 'fade'}
       statusBarTranslucent
       onShow={onShow}
       onRequestClose={onClose}
     >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.root}
-      >
+      <KeyboardAvoidingView behavior="padding" style={styles.root}>
         <Pressable
           style={styles.backdrop}
           onPress={closeOnBackdrop ? onClose : undefined}

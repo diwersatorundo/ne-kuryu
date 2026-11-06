@@ -22,6 +22,7 @@ interface StoredPreferences {
 interface PreferencesValue {
   mode: VisualMode;
   setMode: (mode: VisualMode) => void;
+  reset: () => Promise<void>;
   reducedMotion: boolean;
   motionEnabled: boolean;
   ready: boolean;
@@ -97,15 +98,21 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     ).catch(() => undefined);
   }, []);
 
+  const reset = useCallback(async () => {
+    await AsyncStorage.removeItem(PREFERENCES_STORAGE_KEY);
+    setModeState('beautiful');
+  }, []);
+
   const value = useMemo<PreferencesValue>(
     () => ({
       mode,
       setMode,
+      reset,
       reducedMotion,
       motionEnabled: mode === 'beautiful' && !reducedMotion,
       ready,
     }),
-    [mode, setMode, reducedMotion, ready],
+    [mode, setMode, reset, reducedMotion, ready],
   );
 
   return (

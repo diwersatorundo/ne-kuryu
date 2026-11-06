@@ -3,6 +3,7 @@ import { BlurTargetView } from 'expo-blur';
 import { ComponentRef, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   BackHandler,
   StyleSheet,
   View,
@@ -11,7 +12,10 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { colors } from './src/constants/theme';
 import { AppText } from './src/components/AppText';
 import { AtmosphereBackground } from './src/components/AtmosphereBackground';
-import { PreferencesProvider } from './src/context/PreferencesContext';
+import {
+  PreferencesProvider,
+  usePreferences,
+} from './src/context/PreferencesContext';
 import { useProfile } from './src/hooks/useProfile';
 import { OnboardingFlow } from './src/onboarding/OnboardingFlow';
 import { TabBar, TabKey } from './src/navigation/TabBar';
@@ -22,7 +26,18 @@ import { Profile } from './src/types/profile';
 type EditingState = 'profile' | 'products' | null;
 
 export default function App() {
+  return (
+    <SafeAreaProvider>
+      <PreferencesProvider>
+        <AppContent />
+      </PreferencesProvider>
+    </SafeAreaProvider>
+  );
+}
+
+function AppContent() {
   const { profile, loading, persist, reset } = useProfile();
+  const { reset: resetPreferences } = usePreferences();
   const [tab, setTab] = useState<TabKey>('home');
   const [editing, setEditing] = useState<EditingState>(null);
   const blurTargetRef = useRef<ComponentRef<typeof View> | null>(null);
@@ -46,62 +61,68 @@ export default function App() {
   };
 
   const handleReset = () => {
-    void reset();
-    setEditing(null);
-    setTab('home');
+    void Promise.all([reset(), resetPreferences()])
+      .then(() => {
+        setEditing(null);
+        setTab('home');
+      })
+      .catch(() => {
+        Alert.alert(
+          'Не удалось удалить данные',
+          'Попробуйте ещё раз. Некоторые данные могли остаться на устройстве.',
+        );
+      });
   };
 
   return (
-    <SafeAreaProvider>
-      <PreferencesProvider>
-        <StatusBar style="light" />
-        <View style={styles.root}>
-          <AtmosphereBackground />
-          {loading ? (
-            <View style={styles.loading}>
-              <View style={styles.brandMark} />
-              <AppText
-                variant="caption"
-                color={colors.accent}
-                style={styles.brand}
-              >
-                NICOTINY
-              </AppText>
-              <ActivityIndicator color={colors.accent} />
-            </View>
-          ) : !profile ? (
-            <OnboardingFlow initialProfile={null} onComplete={handleComplete} />
-          ) : editing ? (
-            <OnboardingFlow
-              initialProfile={profile}
-              initialStep={editing}
-              onComplete={handleComplete}
-              onCancel={() => setEditing(null)}
+    <>
+      <StatusBar style="light" />
+      <View style={styles.root}>
+        <AtmosphereBackground />
+        {loading ? (
+          <View style={styles.loading}>
+            <View style={styles.brandMark} />
+            <AppText
+              variant="caption"
+              color={colors.accent}
+              style={styles.brand}
+            >
+              NICOTINY
+            </AppText>
+            <ActivityIndicator color={colors.accent} />
+          </View>
+        ) : !profile ? (
+          <OnboardingFlow initialProfile={null} onComplete={handleComplete} />
+        ) : editing ? (
+          <OnboardingFlow
+            initialProfile={profile}
+            initialStep={editing}
+            onComplete={handleComplete}
+            onCancel={() => setEditing(null)}
+          />
+        ) : (
+          <>
+            <BlurTargetView ref={blurTargetRef} style={styles.flex}>
+              {tab === 'home' ? (
+                <MainScreen profile={profile} />
+              ) : (
+                <SettingsScreen
+                  profile={profile}
+                  onEditProfile={() => setEditing('profile')}
+                  onEditProducts={() => setEditing('products')}
+                  onReset={handleReset}
+                />
+              )}
+            </BlurTargetView>
+            <TabBar
+              active={tab}
+              onChange={setTab}
+              blurTarget={blurTargetRef}
             />
-          ) : (
-            <>
-              <BlurTargetView ref={blurTargetRef} style={styles.flex}>
-                {tab === 'home' ? (
-                  <MainScreen profile={profile} />
-                ) : (
-                  <SettingsScreen
-                    profile={profile}
-                    onEditProfile={() => setEditing('profile')}
-                    onEditProducts={() => setEditing('products')}
-                    onReset={handleReset}
-                  />
-                )}
-              </BlurTargetView>
-              <TabBar
-                active={tab}
-                onChange={setTab}
-                blurTarget={blurTargetRef}
-              />
-            </>
-          )}
-        </View>
-      </PreferencesProvider>
-    </SafeAreaProvider>
+          </>
+        )}
+      </View>
+    </>
   );
 }
 

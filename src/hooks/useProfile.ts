@@ -42,15 +42,8 @@ export function useProfile() {
   }, []);
 
   const reset = useCallback(async () => {
+    await clearProfile();
     setProfile(null);
-    try {
-      await clearProfile();
-    } catch {
-      Alert.alert(
-        'Не удалось удалить данные',
-        'Попробуйте закрыть и снова открыть приложение.',
-      );
-    }
   }, []);
 
   return { profile, loading, persist, reset };

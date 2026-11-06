@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
 import {
   KeyboardAvoidingView,
-  Platform,
   ScrollView,
   StyleProp,
   StyleSheet,
@@ -30,10 +29,7 @@ export function Screen({
 }: ScreenProps) {
   return (
     <SafeAreaView style={[styles.safe, style]} edges={edges}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.flex}
-      >
+      <KeyboardAvoidingView behavior="padding" style={styles.flex}>
         {scroll ? (
           <ScrollView
             style={styles.flex}

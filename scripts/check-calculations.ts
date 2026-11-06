@@ -193,4 +193,49 @@ assert.ok(sphereDay30 > sphereDay365);
 assert.ok(sphereDay365 >= SPHERE_CONFIG.minDiameter - 1e-9);
 assert.ok(Math.abs(sphereDay0 - Math.min(400 * SPHERE_CONFIG.maxDiameterRatio, SPHERE_CONFIG.maxDiameterCap)) < 1e-9);
 
+assert.equal(calculateStats(profile, new Date(quitAt)).moneySaved, 0);
+assert.equal(calculateStats(profile, new Date(quitAt)).cigarettesAvoided, 0);
+assert.equal(
+  calculateProductStats(
+    { type: 'cigarettes', cigarettesPerDay: 10, cigarettesPerPack: 0, pricePerPack: 200 },
+    14,
+  ),
+  null,
+);
+assert.equal(
+  calculateProductStats(
+    { type: 'disposables', devicesPerWeek: 1, pricePerDevice: 1000 },
+    14,
+  )?.liquidMlAvoided,
+  undefined,
+);
+assert.equal(
+  hasErrors(validateProductConfig({
+    type: 'cigarettes',
+    cigarettesPerDay: 201,
+    cigarettesPerPack: 20,
+    pricePerPack: 200,
+  })),
+  true,
+);
+assert.equal(
+  hasErrors(validateProductConfig({
+    type: 'refillablePods',
+    liquidMlPerDay: 2,
+    bottlePrice: 300,
+    bottleVolumeMl: 30,
+    podPrice: 0,
+    podChangeIntervalDays: 15,
+  })),
+  true,
+);
+assert.equal(
+  hasErrors(validateProfileInfo('а'.repeat(61), now)),
+  true,
+);
+assert.equal(formatNumber(0.04, 1), '0');
+assert.equal(formatNumber(-1234.5, 1), '−1\u00A0234,5');
+assert.equal(formatMoney(Number.NaN, 'RUB'), '0\u00A0₽');
+assert.equal(pluralRu(1.5, 'картридж', 'картриджа', 'картриджей'), 'картриджа');
+
 console.log('All calculation and validation checks passed.');

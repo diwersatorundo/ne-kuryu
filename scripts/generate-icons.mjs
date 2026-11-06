@@ -115,17 +115,8 @@ class Canvas {
   }
 
   fillBackground() {
-    const centerX = this.width * 0.5;
-    const centerY = this.height * 0.42;
-    const radius = this.width * 0.85;
-    for (let y = 0; y < this.height; y += 1) {
-      for (let x = 0; x < this.width; x += 1) {
-        const dx = x - centerX;
-        const dy = y - centerY;
-        const t = Math.min(1, Math.sqrt(dx * dx + dy * dy) / radius);
-        const color = mix([15, 21, 30], [6, 8, 11], smoothstep(0, 1, t));
-        this.over(x, y, color[0], color[1], color[2], 1);
-      }
+    for (let index = 3; index < this.pixels.length; index += 4) {
+      this.pixels[index] = 255;
     }
   }
 

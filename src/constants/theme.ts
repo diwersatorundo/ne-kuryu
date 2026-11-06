@@ -1,7 +1,7 @@
 export const colors = {
-  background: '#0A0C10',
-  backgroundDeep: '#06080B',
-  backgroundElevated: '#0E1218',
+  background: '#000000',
+  backgroundDeep: '#000000',
+  backgroundElevated: '#000000',
   surface: 'rgba(255, 255, 255, 0.055)',
   surfaceRaised: 'rgba(255, 255, 255, 0.09)',
   surfacePressed: 'rgba(255, 255, 255, 0.13)',
@@ -44,12 +44,12 @@ export const spacing = {
 } as const;
 
 export const radius = {
-  xs: 10,
-  sm: 14,
-  md: 18,
-  lg: 24,
-  xl: 30,
-  xxl: 36,
+  xs: 5,
+  sm: 5,
+  md: 5,
+  lg: 5,
+  xl: 5,
+  xxl: 5,
   full: 999,
 } as const;
 
@@ -114,7 +114,7 @@ export const typography = {
 } as const;
 
 export const gradients = {
-  screen: ['#0C1118', '#0A0C10', '#06080B'] as const,
+  screen: ['#000000', '#000000', '#000000'] as const,
   glass: [
     'rgba(255, 255, 255, 0.10)',
     'rgba(255, 255, 255, 0.04)',

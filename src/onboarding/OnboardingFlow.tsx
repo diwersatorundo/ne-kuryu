@@ -7,7 +7,7 @@ import {
   PRODUCTS,
   PRODUCT_ORDER,
 } from '../constants/products';
-import { colors, spacing } from '../constants/theme';
+import { colors, radius, spacing } from '../constants/theme';
 import {
   Profile,
   ProfileDraft,
@@ -375,7 +375,7 @@ const styles = StyleSheet.create({
   closeButton: {
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderRadius: 15,
+    borderRadius: radius.md,
     height: 32,
     justifyContent: 'center',
     width: 32,

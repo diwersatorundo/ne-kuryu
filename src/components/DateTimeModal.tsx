@@ -368,8 +368,9 @@ const styles = StyleSheet.create({
   nowButton: {
     backgroundColor: colors.surface,
     borderRadius: radius.full,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    justifyContent: 'center',
+    minHeight: 44,
+    paddingHorizontal: 12,
   },
   pressed: {
     opacity: 0.65,
@@ -383,14 +384,14 @@ const styles = StyleSheet.create({
   monthTitle: {
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 36,
+    minHeight: 44,
     paddingHorizontal: 12,
   },
   navButton: {
     alignItems: 'center',
-    height: 34,
+    height: 44,
     justifyContent: 'center',
-    width: 34,
+    width: 44,
   },
   weekRow: {
     flexDirection: 'row',
@@ -446,7 +447,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.sm,
     flex: 1,
     justifyContent: 'center',
-    minHeight: 42,
+    minHeight: 44,
   },
   yearCellSelected: {
     backgroundColor: colors.accentSoft,

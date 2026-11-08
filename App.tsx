@@ -12,6 +12,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { colors } from './src/constants/theme';
 import { AppText } from './src/components/AppText';
 import { AtmosphereBackground } from './src/components/AtmosphereBackground';
+import { GlassBlurProvider } from './src/context/GlassBlurContext';
 import {
   PreferencesProvider,
   usePreferences,
@@ -40,6 +41,7 @@ function AppContent() {
   const { reset: resetPreferences } = usePreferences();
   const [tab, setTab] = useState<TabKey>('home');
   const [editing, setEditing] = useState<EditingState>(null);
+  const backgroundBlurTargetRef = useRef<ComponentRef<typeof View> | null>(null);
   const blurTargetRef = useRef<ComponentRef<typeof View> | null>(null);
 
   useEffect(() => {
@@ -78,49 +80,57 @@ function AppContent() {
     <>
       <StatusBar style="light" />
       <View style={styles.root}>
-        <AtmosphereBackground />
-        {loading ? (
-          <View style={styles.loading}>
-            <View style={styles.brandMark} />
-            <AppText
-              variant="caption"
-              color={colors.accent}
-              style={styles.brand}
-            >
-              NICOTINY
-            </AppText>
-            <ActivityIndicator color={colors.accent} />
-          </View>
-        ) : !profile ? (
-          <OnboardingFlow initialProfile={null} onComplete={handleComplete} />
-        ) : editing ? (
-          <OnboardingFlow
-            initialProfile={profile}
-            initialStep={editing}
-            onComplete={handleComplete}
-            onCancel={() => setEditing(null)}
-          />
-        ) : (
-          <>
-            <BlurTargetView ref={blurTargetRef} style={styles.flex}>
-              {tab === 'home' ? (
-                <MainScreen profile={profile} />
-              ) : (
-                <SettingsScreen
-                  profile={profile}
-                  onEditProfile={() => setEditing('profile')}
-                  onEditProducts={() => setEditing('products')}
-                  onReset={handleReset}
-                />
-              )}
-            </BlurTargetView>
-            <TabBar
-              active={tab}
-              onChange={setTab}
-              blurTarget={blurTargetRef}
+        <BlurTargetView
+          ref={backgroundBlurTargetRef}
+          style={StyleSheet.absoluteFill}
+          pointerEvents="none"
+        >
+          <AtmosphereBackground />
+        </BlurTargetView>
+        <GlassBlurProvider value={backgroundBlurTargetRef}>
+          {loading ? (
+            <View style={styles.loading}>
+              <View style={styles.brandMark} />
+              <AppText
+                variant="caption"
+                color={colors.accent}
+                style={styles.brand}
+              >
+                NICOTINY
+              </AppText>
+              <ActivityIndicator color={colors.accent} />
+            </View>
+          ) : !profile ? (
+            <OnboardingFlow initialProfile={null} onComplete={handleComplete} />
+          ) : editing ? (
+            <OnboardingFlow
+              initialProfile={profile}
+              initialStep={editing}
+              onComplete={handleComplete}
+              onCancel={() => setEditing(null)}
             />
-          </>
-        )}
+          ) : (
+            <>
+              <BlurTargetView ref={blurTargetRef} style={styles.flex}>
+                {tab === 'home' ? (
+                  <MainScreen profile={profile} />
+                ) : (
+                  <SettingsScreen
+                    profile={profile}
+                    onEditProfile={() => setEditing('profile')}
+                    onEditProducts={() => setEditing('products')}
+                    onReset={handleReset}
+                  />
+                )}
+              </BlurTargetView>
+              <TabBar
+                active={tab}
+                onChange={setTab}
+                blurTarget={blurTargetRef}
+              />
+            </>
+          )}
+        </GlassBlurProvider>
       </View>
     </>
   );
@@ -145,10 +155,6 @@ const styles = StyleSheet.create({
     borderRadius: 26,
     height: 52,
     opacity: 0.9,
-    shadowColor: colors.accent,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.6,
-    shadowRadius: 30,
     width: 52,
   },
   brand: {

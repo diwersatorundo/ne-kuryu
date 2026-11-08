@@ -162,41 +162,47 @@ export function SettingsScreen({
             const product = PRODUCTS[config.type];
             const productDailySpend = getProductDailySpend(config);
             return (
-              <Pressable
+              <Card
                 key={config.type}
-                accessibilityRole="button"
-                onPress={onEditProducts}
-                style={({ pressed }) => [
-                  styles.productRow,
-                  pressed && styles.pressed,
-                ]}
+                padded={false}
+                radiusValue={radius.lg}
               >
-                <IconTile
-                  icon={product.icon}
-                  color={product.accent}
-                  background={product.accentSoft}
-                  size={42}
-                  iconSize={19}
-                />
-                <View style={styles.productText}>
-                  <AppText variant="h3">{product.title}</AppText>
-                  <AppText
-                    variant="small"
-                    color={colors.textMuted}
-                    numberOfLines={2}
-                  >
-                    {describeConsumption(config, currency)}
-                  </AppText>
-                </View>
-                <View style={styles.productRight}>
-                  <AppText variant="caption" color={colors.textMuted}>
-                    {productDailySpend > 0
-                      ? `≈ ${formatMoney(productDailySpend, currency, 1)}/день`
-                      : '—'}
-                  </AppText>
-                  <ChevronRight size={16} color={colors.textMuted} />
-                </View>
-              </Pressable>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={`Изменить продукты: ${product.title}`}
+                  onPress={onEditProducts}
+                  style={({ pressed }) => [
+                    styles.productRow,
+                    pressed && styles.pressed,
+                  ]}
+                >
+                  <IconTile
+                    icon={product.icon}
+                    color={product.accent}
+                    background={product.accentSoft}
+                    size={42}
+                    iconSize={19}
+                  />
+                  <View style={styles.productText}>
+                    <AppText variant="h3">{product.title}</AppText>
+                    <AppText
+                      variant="small"
+                      color={colors.textMuted}
+                      numberOfLines={2}
+                    >
+                      {describeConsumption(config, currency)}
+                    </AppText>
+                  </View>
+                  <View style={styles.productRight}>
+                    <AppText variant="caption" color={colors.textMuted}>
+                      {productDailySpend > 0
+                        ? `≈ ${formatMoney(productDailySpend, currency, 1)}/день`
+                        : '—'}
+                    </AppText>
+                    <ChevronRight size={16} color={colors.textMuted} />
+                  </View>
+                </Pressable>
+              </Card>
             );
           })}
         </View>
@@ -212,29 +218,31 @@ export function SettingsScreen({
 
       <View style={styles.section}>
         <SectionHeader title="Данные и расчёты" style={styles.sectionHeader} />
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => setExplanationVisible(true)}
-          style={({ pressed }) => [
-            styles.menuRow,
-            pressed && styles.pressed,
-          ]}
-        >
-          <IconTile
-            icon={Calculator}
-            color={colors.accent}
-            background={colors.accentSoft}
-            size={42}
-            iconSize={19}
-          />
-          <View style={styles.menuText}>
-            <AppText variant="h3">Как считаются показатели</AppText>
-            <AppText variant="small" color={colors.textMuted}>
-              Формулы, оценки и ограничения
-            </AppText>
-          </View>
-          <ChevronRight size={16} color={colors.textMuted} />
-        </Pressable>
+        <Card padded={false} radiusValue={radius.lg}>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => setExplanationVisible(true)}
+            style={({ pressed }) => [
+              styles.menuRow,
+              pressed && styles.pressed,
+            ]}
+          >
+            <IconTile
+              icon={Calculator}
+              color={colors.accent}
+              background={colors.accentSoft}
+              size={42}
+              iconSize={19}
+            />
+            <View style={styles.menuText}>
+              <AppText variant="h3">Как считаются показатели</AppText>
+              <AppText variant="small" color={colors.textMuted}>
+                Формулы, оценки и ограничения
+              </AppText>
+            </View>
+            <ChevronRight size={16} color={colors.textMuted} />
+          </Pressable>
+        </Card>
       </View>
 
       <View style={styles.section}>
@@ -366,7 +374,9 @@ const styles = StyleSheet.create({
   linkButton: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 3,
+    gap: 4,
+    minHeight: 44,
+    paddingHorizontal: 4,
   },
   pressed: {
     opacity: 0.65,
@@ -376,7 +386,6 @@ const styles = StyleSheet.create({
   },
   productRow: {
     alignItems: 'center',
-    backgroundColor: colors.surface,
     borderRadius: radius.lg,
     flexDirection: 'row',
     gap: 12,
@@ -385,10 +394,13 @@ const styles = StyleSheet.create({
   productText: {
     flex: 1,
     gap: 2,
+    minWidth: 0,
   },
   productRight: {
     alignItems: 'flex-end',
+    flexShrink: 0,
     gap: 4,
+    maxWidth: '42%',
   },
   addButton: {
     marginTop: 8,

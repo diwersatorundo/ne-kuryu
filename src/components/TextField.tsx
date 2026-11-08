@@ -53,6 +53,7 @@ export function TextField({
         </View>
       )}
       <View
+        collapsable={false}
         style={[
           styles.inputWrap,
           multiline && styles.multilineWrap,

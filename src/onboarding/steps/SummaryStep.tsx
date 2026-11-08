@@ -122,41 +122,43 @@ export function SummaryStep({
           {rows.map(({ config, dailySpend: productDailySpend }) => {
             const product = PRODUCTS[config.type];
             return (
-              <Pressable
-                key={config.type}
-                accessibilityRole="button"
-                onPress={() => onEditConsumption(config.type)}
-                style={({ pressed }) => [
-                  styles.productRow,
-                  pressed && styles.pressed,
-                ]}
-              >
-                <IconTile
-                  icon={product.icon}
-                  color={product.accent}
-                  background={product.accentSoft}
-                  size={38}
-                  iconSize={18}
-                />
-                <View style={styles.productText}>
-                  <AppText variant="h3">{product.title}</AppText>
-                  <AppText
-                    variant="small"
-                    color={colors.textMuted}
-                    numberOfLines={2}
-                  >
-                    {describeConsumption(config, currency)}
-                  </AppText>
-                </View>
-                <View style={styles.productRight}>
-                  <AppText variant="small" color={product.accent}>
-                    {productDailySpend > 0
-                      ? `${formatMoney(productDailySpend, currency, 1)}/день`
-                      : '—'}
-                  </AppText>
-                  <Pencil size={13} color={colors.textMuted} />
-                </View>
-              </Pressable>
+              <Card key={config.type} padded={false} radiusValue={radius.lg}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={`Изменить параметры: ${product.title}`}
+                  onPress={() => onEditConsumption(config.type)}
+                  style={({ pressed }) => [
+                    styles.productRow,
+                    pressed && styles.pressed,
+                  ]}
+                >
+                  <IconTile
+                    icon={product.icon}
+                    color={product.accent}
+                    background={product.accentSoft}
+                    size={38}
+                    iconSize={18}
+                  />
+                  <View style={styles.productText}>
+                    <AppText variant="h3">{product.title}</AppText>
+                    <AppText
+                      variant="small"
+                      color={colors.textMuted}
+                      numberOfLines={2}
+                    >
+                      {describeConsumption(config, currency)}
+                    </AppText>
+                  </View>
+                  <View style={styles.productRight}>
+                    <AppText variant="small" color={product.accent}>
+                      {productDailySpend > 0
+                        ? `${formatMoney(productDailySpend, currency, 1)}/день`
+                        : '—'}
+                    </AppText>
+                    <Pencil size={13} color={colors.textMuted} />
+                  </View>
+                </Pressable>
+              </Card>
             );
           })}
         </View>
@@ -256,6 +258,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     gap: 4,
+    minHeight: 44,
+    paddingHorizontal: 4,
   },
   pressed: {
     opacity: 0.65,

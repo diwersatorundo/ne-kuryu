@@ -71,9 +71,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.surface,
     borderRadius: radius.full,
-    height: 42,
+    height: 48,
     justifyContent: 'center',
-    width: 42,
+    width: 48,
   },
   backPressed: {
     backgroundColor: colors.surfaceRaised,

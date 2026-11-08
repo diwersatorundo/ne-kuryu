@@ -159,20 +159,69 @@ function categoryDetail(stat: ProductStats): string {
   }
 }
 
-export function MainScreen({ profile }: MainScreenProps) {
+function HeroSection({ profile }: MainScreenProps) {
   const now = useNow(1000);
   const { width } = useWindowDimensions();
-  const stats = calculateStats(profile, now);
+  const difference = now.getTime() - new Date(profile.quitAt).getTime();
+  const isFuture = difference < 0;
+  const elapsedMs = Math.max(0, difference);
   const hero = getHeroContent(profile, now);
-  const motivation = getMotivation(stats.time.elapsedMs, stats.time.isFuture);
-  const currency = profile.currency;
-  const sphereDays = Math.floor(stats.time.elapsedDays * 24) / 24;
+  const motivation = getMotivation(elapsedMs, isFuture);
+  const sphereDays = Math.floor((elapsedMs / MS_DAY) * 24) / 24;
   const sphereDiameter = getSphereDiameter(
     sphereDays,
-    width,
-    stats.time.isFuture,
+    Math.max(160, width - 72),
+    isFuture,
   );
-  const sphereFrameHeight = Math.max(196, Math.min(312, sphereDiameter * 0.9));
+  const sphereFrameHeight = Math.max(160, Math.min(240, sphereDiameter * 0.88));
+
+  return (
+    <Card style={styles.heroCard} radiusValue={radius.xxl}>
+      <View style={[styles.sphereFrame, { height: sphereFrameHeight }]}>
+        <SmokeSphere elapsedDays={sphereDays} isFuture={isFuture} />
+      </View>
+
+      <View style={styles.heroContent}>
+        <AppText
+          variant="body"
+          color={colors.textSecondary}
+          style={styles.eyebrow}
+        >
+          {hero.eyebrow}
+        </AppText>
+        <View style={styles.heroValueRow}>
+          <AppText
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.48}
+            style={styles.heroValue}
+          >
+            {hero.value}
+          </AppText>
+          <AppText style={styles.heroUnit}>{hero.unit}</AppText>
+        </View>
+        <AppText variant="small" color={colors.textMuted}>
+          {hero.subline}
+        </AppText>
+        <View style={styles.motivationPill}>
+          <View style={styles.motivationDot} />
+          <AppText
+            variant="small"
+            color={colors.textSecondary}
+            style={styles.motivation}
+          >
+            {motivation}
+          </AppText>
+        </View>
+      </View>
+    </Card>
+  );
+}
+
+export function MainScreen({ profile }: MainScreenProps) {
+  const now = useNow(60_000);
+  const stats = calculateStats(profile, now);
+  const currency = profile.currency;
 
   return (
     <Screen edges={['top']} contentContainerStyle={styles.content}>
@@ -191,48 +240,7 @@ export function MainScreen({ profile }: MainScreenProps) {
         </View>
       </View>
 
-      <View style={styles.hero}>
-        <View style={[styles.sphereFrame, { height: sphereFrameHeight }]}>
-          <SmokeSphere
-            elapsedDays={sphereDays}
-            isFuture={stats.time.isFuture}
-          />
-        </View>
-
-        <View style={styles.heroContent}>
-          <AppText
-            variant="body"
-            color={colors.textSecondary}
-            style={styles.eyebrow}
-          >
-            {hero.eyebrow}
-          </AppText>
-          <View style={styles.heroValueRow}>
-            <AppText
-              numberOfLines={1}
-              adjustsFontSizeToFit
-              minimumFontScale={0.48}
-              style={styles.heroValue}
-            >
-              {hero.value}
-            </AppText>
-            <AppText style={styles.heroUnit}>{hero.unit}</AppText>
-          </View>
-          <AppText variant="small" color={colors.textMuted}>
-            {hero.subline}
-          </AppText>
-          <View style={styles.motivationPill}>
-            <View style={styles.motivationDot} />
-            <AppText
-              variant="small"
-              color={colors.textSecondary}
-              style={styles.motivation}
-            >
-              {motivation}
-            </AppText>
-          </View>
-        </View>
-      </View>
+      <HeroSection profile={profile} />
 
       {stats.time.isFuture ? (
         <Card tone="violet" style={styles.futureCard} radiusValue={radius.xl}>
@@ -432,14 +440,14 @@ export function MainScreen({ profile }: MainScreenProps) {
 
 const styles = StyleSheet.create({
   content: {
-    paddingBottom: 24,
+    paddingBottom: 32,
     paddingTop: 8,
   },
   brandRow: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 4,
+    marginBottom: 12,
     zIndex: 2,
   },
   brandLockup: {
@@ -450,12 +458,8 @@ const styles = StyleSheet.create({
   brandDot: {
     backgroundColor: colors.accent,
     borderRadius: 4,
-    height: 8,
-    shadowColor: colors.accent,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.8,
-    shadowRadius: 10,
-    width: 8,
+    height: 7,
+    width: 7,
   },
   brand: {
     fontWeight: '700',
@@ -464,23 +468,25 @@ const styles = StyleSheet.create({
   datePill: {
     alignItems: 'center',
     backgroundColor: colors.surface,
+    borderColor: colors.border,
     borderRadius: radius.full,
+    borderWidth: 1,
     flexDirection: 'row',
     gap: 6,
     paddingHorizontal: 11,
     paddingVertical: 6,
   },
-  hero: {
-    marginTop: 6,
+  heroCard: {
+    marginTop: 4,
   },
   sphereFrame: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: -18,
+    marginBottom: -30,
   },
   heroContent: {
     alignItems: 'center',
-    gap: 6,
+    gap: 4,
   },
   eyebrow: {
     textAlign: 'center',
@@ -495,14 +501,11 @@ const styles = StyleSheet.create({
   heroValue: {
     color: colors.text,
     flexShrink: 1,
-    fontSize: 92,
+    fontSize: 80,
     fontVariant: ['tabular-nums'],
     fontWeight: '700',
-    letterSpacing: -5,
-    lineHeight: 98,
-    textShadowColor: 'rgba(0, 0, 0, 0.45)',
-    textShadowOffset: { width: 0, height: 6 },
-    textShadowRadius: 22,
+    letterSpacing: -4,
+    lineHeight: 86,
   },
   heroUnit: {
     color: colors.accent,
@@ -513,10 +516,12 @@ const styles = StyleSheet.create({
   motivationPill: {
     alignItems: 'flex-start',
     backgroundColor: colors.surface,
+    borderColor: colors.border,
     borderRadius: radius.full,
+    borderWidth: 1,
     flexDirection: 'row',
     gap: 7,
-    marginTop: 8,
+    marginTop: 12,
     maxWidth: '100%',
     paddingHorizontal: 13,
     paddingVertical: 8,
@@ -532,7 +537,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   moneyCard: {
-    marginTop: 22,
+    marginTop: 12,
     gap: 6,
   },
   cardHeader: {
@@ -552,9 +557,9 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 10,
+    gap: 8,
     justifyContent: 'space-between',
-    marginTop: 10,
+    marginTop: 12,
   },
   statCard: {
     width: '48%',
@@ -577,22 +582,26 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
     flexDirection: 'row',
     gap: 12,
-    padding: 10,
+    padding: 12,
   },
   categoryText: {
     flex: 1,
     gap: 2,
+    minWidth: 0,
   },
   categoryRight: {
     alignItems: 'flex-end',
+    flexShrink: 0,
     gap: 2,
+    maxWidth: '40%',
   },
   futureCard: {
-    marginTop: 24,
+    marginTop: 12,
     gap: 10,
   },
   futureStats: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 18,
   },
   futureMetric: {

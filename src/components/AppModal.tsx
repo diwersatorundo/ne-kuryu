@@ -125,8 +125,10 @@ const styles = StyleSheet.create({
   sheet: {
     alignSelf: 'center',
     backgroundColor: colors.surfaceSolid,
+    borderColor: colors.borderStrong,
     borderTopLeftRadius: radius.xxl,
     borderTopRightRadius: radius.xxl,
+    borderWidth: 1,
     maxHeight: '92%',
     maxWidth: 560,
     overflow: 'hidden',
@@ -135,7 +137,7 @@ const styles = StyleSheet.create({
   },
   handle: {
     alignSelf: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.18)',
+    backgroundColor: colors.borderStrong,
     borderRadius: radius.full,
     height: 4,
     marginBottom: 12,
@@ -156,10 +158,12 @@ const styles = StyleSheet.create({
   closeButton: {
     alignItems: 'center',
     backgroundColor: colors.surface,
+    borderColor: colors.border,
     borderRadius: radius.full,
-    height: 36,
+    borderWidth: 1,
+    height: 48,
     justifyContent: 'center',
-    width: 36,
+    width: 48,
   },
   closePressed: {
     backgroundColor: colors.surfaceRaised,

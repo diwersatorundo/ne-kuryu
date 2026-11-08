@@ -59,13 +59,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
+    alignSelf: 'center',
+    maxWidth: 600,
     paddingBottom: spacing.xl,
     paddingHorizontal: spacing.xl,
+    width: '100%',
   },
   footer: {
+    alignSelf: 'center',
     gap: spacing.sm,
+    maxWidth: 600,
     paddingBottom: spacing.md,
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.md,
+    width: '100%',
   },
 });

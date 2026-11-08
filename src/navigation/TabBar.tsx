@@ -38,7 +38,7 @@ export function TabBar({ active, onChange, blurTarget }: TabBarProps) {
         <View style={styles.clip}>
           {beautiful ? (
             <BlurView
-              intensity={36}
+              intensity={32}
               tint="dark"
               blurTarget={blurTarget}
               blurMethod="dimezisBlurViewSdk31Plus"
@@ -49,7 +49,7 @@ export function TabBar({ active, onChange, blurTarget }: TabBarProps) {
             colors={
               beautiful
                 ? gradients.glassRaised
-                : ['rgba(24, 30, 39, 0.98)', 'rgba(18, 22, 29, 0.98)']
+                : [colors.surfaceSolidRaised, colors.surfaceSolid]
             }
             start={{ x: 0.1, y: 0 }}
             end={{ x: 0.9, y: 1 }}
@@ -63,6 +63,7 @@ export function TabBar({ active, onChange, blurTarget }: TabBarProps) {
                 <Pressable
                   key={tab.key}
                   accessibilityRole="tab"
+                  accessibilityLabel={tab.label}
                   accessibilityState={{ selected }}
                   onPress={() => onChange(tab.key)}
                   onFocus={() => setFocused(tab.key)}
@@ -98,12 +99,18 @@ export function TabBar({ active, onChange, blurTarget }: TabBarProps) {
 
 const styles = StyleSheet.create({
   wrapper: {
+    alignItems: 'center',
     paddingHorizontal: 16,
     paddingTop: 8,
+    width: '100%',
   },
   bar: {
-    backgroundColor: 'transparent',
+    backgroundColor: colors.surfaceSolid,
+    borderColor: colors.borderStrong,
     borderRadius: radius.xxl,
+    borderWidth: 1,
+    maxWidth: 480,
+    width: '100%',
   },
   clip: {
     borderRadius: radius.xxl,

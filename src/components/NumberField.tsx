@@ -104,10 +104,12 @@ export function NumberField({
 
 const styles = StyleSheet.create({
   unknownChip: {
+    alignItems: 'center',
     backgroundColor: colors.surface,
     borderRadius: radius.full,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    justifyContent: 'center',
+    minHeight: 44,
+    paddingHorizontal: 12,
   },
   unknownChipActive: {
     backgroundColor: colors.accentSoft,

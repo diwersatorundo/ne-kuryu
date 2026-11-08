@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { colors, radius } from '../constants/theme';
 import { ProductInfo } from '../constants/products';
 import { AppText } from './AppText';
+import { Card } from './Card';
 import { IconTile } from './IconTile';
 
 interface SelectCardProps {
@@ -16,63 +17,60 @@ export function SelectCard({ product, selected, onPress }: SelectCardProps) {
   const [focused, setFocused] = useState(false);
 
   return (
-    <Pressable
-      accessibilityRole="checkbox"
-      accessibilityState={{ checked: selected }}
-      onPress={onPress}
-      onFocus={() => setFocused(true)}
-      onBlur={() => setFocused(false)}
-      style={({ pressed }) => [
-        styles.card,
-        selected && styles.cardSelected,
-        focused && styles.cardFocused,
-        pressed && styles.cardPressed,
-      ]}
-    >
-      <IconTile
-        icon={product.icon}
-        color={product.accent}
-        background={product.accentSoft}
-        size={44}
-        iconSize={20}
-      />
-      <View style={styles.textBlock}>
-        <AppText variant="h3">{product.title}</AppText>
-        <AppText variant="small" color={colors.textMuted}>
-          {product.description}
-        </AppText>
-      </View>
-      <View style={[styles.check, selected && styles.checkSelected]}>
-        {selected ? (
-          <Check size={14} color={colors.accentInk} strokeWidth={2.6} />
-        ) : null}
-      </View>
-    </Pressable>
+    <Card padded={false} tone={selected ? 'accent' : 'default'}>
+      <Pressable
+        accessibilityRole="checkbox"
+        accessibilityState={{ checked: selected }}
+        onPress={onPress}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        style={({ pressed }) => [
+          styles.card,
+          selected && styles.cardSelected,
+          focused && styles.cardFocused,
+          pressed && styles.cardPressed,
+        ]}
+      >
+        <IconTile
+          icon={product.icon}
+          color={product.accent}
+          background={product.accentSoft}
+          size={44}
+          iconSize={20}
+        />
+        <View style={styles.textBlock}>
+          <AppText variant="h3">{product.title}</AppText>
+          <AppText variant="small" color={colors.textMuted}>
+            {product.description}
+          </AppText>
+        </View>
+        <View style={[styles.check, selected && styles.checkSelected]}>
+          {selected ? (
+            <Check size={14} color={colors.accentInk} strokeWidth={2.6} />
+          ) : null}
+        </View>
+      </Pressable>
+    </Card>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
     alignItems: 'center',
-    backgroundColor: colors.surface,
     borderRadius: radius.lg,
     flexDirection: 'row',
     gap: 12,
-    minHeight: 72,
+    minHeight: 80,
     padding: 12,
   },
   cardSelected: {
-    backgroundColor: colors.surfaceRaised,
+    backgroundColor: colors.accentSoft,
   },
   cardPressed: {
     opacity: 0.78,
   },
   cardFocused: {
-    elevation: 8,
-    shadowColor: colors.accent,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
+    backgroundColor: colors.surfaceRaised,
   },
   textBlock: {
     flex: 1,
@@ -80,13 +78,16 @@ const styles = StyleSheet.create({
   },
   check: {
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.07)',
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.border,
     borderRadius: radius.full,
-    height: 24,
+    borderWidth: 1,
+    height: 26,
     justifyContent: 'center',
-    width: 24,
+    width: 26,
   },
   checkSelected: {
     backgroundColor: colors.accent,
+    borderColor: colors.accent,
   },
 });
